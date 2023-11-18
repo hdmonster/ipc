@@ -1,0 +1,52 @@
+version: '3.8'
+ 
+services:
+  # mysql:
+  #   image: mysql:8.0.19
+  #   networks:
+  #     - my-network
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: neptune2k
+  #   volumes:
+  #     - dbdata:/var/lib/mysql
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin:5.0.2
+  #   networks:
+  #     - my-network
+  #   ports:
+  #     - 8080:80
+  #   environment:
+  #     PMA_HOST: mysql
+  #   depends_on: 
+  #     - mysql
+  
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 1605:1605
+  #   networks:
+  #     - ipc-network
+    # depends_on:
+    #   - mysql
+    
+  
+  frontend:
+    image: node:alpine
+    container_name: frontend
+    entrypoint: /bin/sh
+    ports:
+      - 1604:1604
+    working_dir: /frontend
+    volumes:
+      - type: bind
+        source: ./
+        target: /frontend
+    tty: true
+
+# networks:
+#   ipc-network:
+#     external: true
+# volumes:
+#   dbdata:
