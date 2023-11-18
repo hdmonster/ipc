@@ -33,17 +33,18 @@ services:
     
   
   frontend:
-    image: node:alpine
-    container_name: frontend
-    entrypoint: /bin/sh
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - 1604:1604
-    working_dir: /frontend
-    volumes:
-      - type: bind
-        source: ./
-        target: /frontend
-    tty: true
+    # entrypoint: /bin/sh
+    # working_dir: /frontend
+    # volumes:
+    #   - type: bind
+    #     source: ./
+    #     target: /frontend
+    # tty: true
 
 # networks:
 #   ipc-network:
