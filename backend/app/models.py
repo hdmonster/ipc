@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text
-
+from sqlalchemy import Column, DateTime, Integer, String, Text
+from datetime import datetime
 from .database import Base
 
 
@@ -9,20 +9,17 @@ class Document(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(50), unique=True, index=True)
     content = Column(Text)
-    url = Column(String(50))
     author = Column(String(50))
     course = Column(String(20))
     topic = Column(String(20))
     year = Column(String(4))
     uploader = Column(String(20))
+    created_at = Column(DateTime, default=datetime.utcnow)
 
+class Submission(Base):
+    __tablename__ = "submissions"
 
-# class History(Base):
-#     __tablename__ = "items"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     title = Column(String, index=True)
-#     description = Column(String, index=True)
-#     owner_id = Column(Integer, ForeignKey("users.id"))
-
-#     owner = relationship("User", back_populates="items")
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(Text)
+    score = Column(Integer)
+    created_at = Column(DateTime, default=datetime.utcnow)
