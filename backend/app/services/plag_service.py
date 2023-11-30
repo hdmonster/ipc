@@ -1,9 +1,10 @@
 from ..schemas import DocumentBase
 import nltk, string
+from nltk.corpus import stopwords
 from operator import itemgetter
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# nltk.download('punkt')
+stop_words_id = set(stopwords.words('indonesian'))
 
 class PlagiarismDetect():
     vectorizer = None
@@ -28,10 +29,15 @@ class PlagiarismDetect():
 
         return stemmed_token
 
-    
+    def preprocess(self, document):
+        return ' '.join([word for word in document.split() if word.lower() not in stop_words_id])
+
     def cos_similarity(self, db_doc, input_doc):
-        vectorizer = self.vectorizer or TfidfVectorizer(tokenizer=PlagiarismDetect.tokenize_and_stem, stop_words='english')
-        tfidf = vectorizer.fit_transform([db_doc, input_doc])
+        preprocessed_db_doc = self.preprocess(db_doc)
+        preprocessed_input_doc = self.preprocess(input_doc)
+
+        vectorizer = TfidfVectorizer(tokenizer=PlagiarismDetect.tokenize_and_stem)
+        tfidf = vectorizer.fit_transform([preprocessed_db_doc, preprocessed_input_doc])
         return ((tfidf * tfidf.T).A)[0,1]
 
     
