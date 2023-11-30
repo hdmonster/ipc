@@ -20,14 +20,14 @@ services:
   #   depends_on: 
   #     - mysql
   
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 1605:1605
-  #   networks:
-  #     - ipc-network
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 1605:1605
+    networks:
+      - my-network
     # depends_on:
     #   - mysql
     
@@ -46,8 +46,8 @@ services:
     #     target: /frontend
     # tty: true
 
-# networks:
-#   ipc-network:
-#     external: true
+networks:
+  my-network:
+    external: true
 # volumes:
 #   dbdata:
