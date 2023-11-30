@@ -2,7 +2,7 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 
-export default function Review() {
+export default function Review({ state }) {
   return (
     <React.Fragment>
       <Typography variant='h6' gutterBottom>
@@ -12,29 +12,35 @@ export default function Review() {
       <Grid container spacing={2}>
         <Grid item container direction='column' xs={12} sm={6}>
           <Typography variant='h6' gutterBottom sx={{ mt: 2 }}>
-            `` Metadata
+            Metadata
           </Typography>
           <Grid container>
-            <>
-              <Grid item xs={6}>
-                <Typography gutterBottom>Filename</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography gutterBottom>nlp-doc.pdf</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography gutterBottom>Filetype</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography gutterBottom>Application/PDF</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography gutterBottom>Size</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography gutterBottom>3MB</Typography>
-              </Grid>
-            </>
+            {state.files != null ? (
+              <>
+                <Grid item xs={6}>
+                  <Typography gutterBottom>Filename</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography gutterBottom>{state.files[0].name}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography gutterBottom>Filetype</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography gutterBottom>{state.files[0].type}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography gutterBottom>Size</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography gutterBottom>
+                    {Math.round(state.files[0].size / 100000)} MB
+                  </Typography>
+                </Grid>
+              </>
+            ) : (
+              <>No file found</>
+            )}
           </Grid>
         </Grid>
         <Grid item container direction='column' xs={12} sm={6}>
@@ -44,28 +50,28 @@ export default function Review() {
           <Grid container>
             <>
               <Grid item xs={6}>
-                <Typography gutterBottom>Name</Typography>
+                <Typography gutterBottom>Title</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography gutterBottom>Kelompok 3</Typography>
+                <Typography gutterBottom>{state.title}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography gutterBottom>Course</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography gutterBottom>NLP A</Typography>
+                <Typography gutterBottom>{state.course}</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography gutterBottom>Course Type</Typography>
+                <Typography gutterBottom>Author</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography gutterBottom>Prodi</Typography>
+                <Typography gutterBottom>{state.author}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography gutterBottom>Year</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography gutterBottom>2023</Typography>
+                <Typography gutterBottom>{state.year}</Typography>
               </Grid>
             </>
           </Grid>

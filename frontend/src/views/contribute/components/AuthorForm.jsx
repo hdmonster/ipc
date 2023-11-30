@@ -2,20 +2,12 @@ import { FormControl, MenuItem } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import * as React from 'react'
-import { useState } from 'react'
 
-export default function AuthorForm() {
-  const [topic, setTopic] = useState('')
-
-  const handleTopic = e => {
-    setTopic(e.target.value)
-  }
-
+export default function AuthorForm({ handleChange }) {
   const topics = ['TPB', 'Prodi']
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant='h6' gutterBottom>
         Document Information
       </Typography>
@@ -24,21 +16,35 @@ export default function AuthorForm() {
           <Grid item xs={12}>
             <TextField
               required
-              id='author'
-              name='author'
-              label='Author'
-              placeholder='eg. Andy Morris/Kelompok 4'
+              id='title'
+              name='title'
+              label='Title'
+              placeholder='eg. Laporan Tugas Besar ABC'
+              onChange={handleChange}
               variant='standard'
               fullWidth
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
+            <TextField
+              required
+              id='author'
+              name='author'
+              label='Author'
+              placeholder='eg. Andy Morris/Kelompok 4'
+              onChange={handleChange}
+              variant='standard'
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={6}>
             <TextField
               required
               id='course'
               name='course'
               label='Course'
               placeholder='eg. Fisdas A/PBN A'
+              onChange={handleChange}
               variant='standard'
               fullWidth
             />
@@ -48,9 +54,8 @@ export default function AuthorForm() {
               id='topic'
               name='topic'
               label='Topic'
-              value={topic}
               select
-              onChange={handleTopic}
+              onChange={handleChange}
               variant='standard'
               fullWidth
             >
@@ -69,12 +74,13 @@ export default function AuthorForm() {
               id='year'
               name='year'
               label='Year'
-              fullWidth
+              onChange={handleChange}
               variant='standard'
+              fullWidth
             />
           </Grid>
         </Grid>
       </FormControl>
-    </React.Fragment>
+    </>
   )
 }
