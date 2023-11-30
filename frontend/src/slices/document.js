@@ -13,7 +13,7 @@ const initialState = {
 
 const reducers = {
   setDocumentData: (state, action) => {
-    state.document = { ...state.document, ...action.payload }
+    state = { ...state, ...action.payload }
   },
 }
 
@@ -25,6 +25,6 @@ const slice = createSlice({
 
 export const { setDocumentData } = slice.actions
 
-export const selectDocument = state => state.document
+export const getDocument = state => state
 
 export const { reducer } = slice
