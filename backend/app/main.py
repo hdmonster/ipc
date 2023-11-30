@@ -1,6 +1,3 @@
-from datetime import datetime
-import io
-
 from .services.plag_service import PlagiarismDetect
 
 from .utils.pdf_handler import get_content
@@ -10,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy.orm import Session
 
-from . import crud, models, schemas
+from . import models
 from .database import SessionLocal, engine
 
 
@@ -18,8 +15,9 @@ app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
 
 origins = [
-    "http://localhost:1605",
-    "localhost:1605"
+    "https://3aa3-36-85-39-220.ngrok-free.app",
+    "http://localhost:1604",
+    "localhost:1604"
 ]
 
 
@@ -48,11 +46,15 @@ async def get_documents(db: Session = Depends(get_db)):
     return docs
 
 @app.post('/check/', status_code=status.HTTP_201_CREATED)
-async def plagiarism_check(file: UploadFile = File(...), db: Session = Depends(get_db)):
+async def plagiarism_check(
+    file: UploadFile = File(...), 
+    start: int = Form(...), 
+    end: int = Form(...), 
+    db: Session = Depends(get_db)):
     try:
         # Get uploaded file content
         raw_contents = await file.read()
-        content = get_content(raw_contents)
+        content = get_content(raw_contents, start, end)
 
         # Get db data
         docs = db.query(models.Document).offset(0).limit(10).all()
@@ -70,7 +72,6 @@ async def plagiarism_check(file: UploadFile = File(...), db: Session = Depends(g
 
         return { 
             'status' : 'OK', 
-            'filename' : file.filename, 
             'score' : similar_docs[0]['score'], 
             'similar_docs' : similar_docs 
         }
@@ -79,10 +80,11 @@ async def plagiarism_check(file: UploadFile = File(...), db: Session = Depends(g
 
 @app.post('/contribute/', status_code=status.HTTP_201_CREATED)
 async def submit_contribution(
-    file: UploadFile = File(...), 
+    file: UploadFile = File(...),
+    start: int = Form(...), 
+    end: int = Form(...),  
     title: str = Form(...), 
     author: str = Form(...),
-    content: str = Form(...),
     course: str = Form(...),
     topic: str = Form(...),
     year: str = Form(...),
@@ -90,23 +92,23 @@ async def submit_contribution(
     db: Session = Depends(get_db)):
     try:
         raw_contents = await file.read()
-        content = get_content(raw_contents)
+        content = get_content(raw_contents, start, end)
 
-        doc_data = schemas.DocumentBase(
-                            title=title, 
-                            author=author, 
-                            content=content, 
-                            course=course, 
-                            topic=topic, 
-                            year=year, 
-                            uploader=uploader
-                        )
+        data = {
+            'title':title, 
+            'author':author, 
+            'content':content, 
+            'course':course, 
+            'topic':topic, 
+            'year':year, 
+            'uploader':uploader
+        }
         
-        doc = models.Document(**doc_data.dict())
+        doc = models.Document(**data)
         
         db.add(doc)
         db.commit()
         
-        return { 'status' : 'OK', 'filename' : file.filename, 'uploader' : uploader }
+        return { 'status' : 'OK', 'message' : 'Thank you for your contribution' }
     except Exception as e:
         return { 'status' : 'ERROR', 'message' : e }
